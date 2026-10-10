@@ -10,17 +10,11 @@ Arcade Vault is an online platform for playing games and competing for the highe
 
 Development follows **Spec Driven Design** using the `/spec` and `/spec-impl` skills from [Klerith/fernando-skills](https://github.com/Klerith/fernando-skills) (install with `npx skills@latest add Klerith/fernando-skills`). Write or update a spec before implementing a feature, then implement against it.
 
-## Commands
-
-```bash
-npm run dev     # next dev (Turbopack), http://localhost:3000
-npm run build   # production build
-npm run start   # serve the production build
-npm run lint    # eslint (flat config: next core-web-vitals + typescript)
-npx tsc --noEmit  # type-check (no dedicated script)
-```
-
 No test runner is configured yet.
+
+## Skills
+
+Usa siempre /frontend-design para diseñar la interfaz de usuario.
 
 ## Stack and non-default configuration
 
