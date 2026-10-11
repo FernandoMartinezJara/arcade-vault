@@ -172,6 +172,31 @@ export function GamePlayer({ game }: { game: Game }) {
           <span>CARGA · 1MB</span>
         </div>
       </div>
+      {isReal && (
+        <p className="controls-legend" aria-label="Controles">
+          <span>
+            <kbd>←</kbd> <kbd>→</kbd> ROTAR
+          </span>
+          <span className="sep" aria-hidden="true">
+            ·
+          </span>
+          <span>
+            <kbd>↑</kbd> PROPULSAR
+          </span>
+          <span className="sep" aria-hidden="true">
+            ·
+          </span>
+          <span>
+            <kbd>ESPACIO</kbd> DISPARAR
+          </span>
+          <span className="sep" aria-hidden="true">
+            ·
+          </span>
+          <span>
+            <kbd>P</kbd> PAUSA
+          </span>
+        </p>
+      )}
       {over && (
         <div className="modal-bd">
           <div
