@@ -11,7 +11,7 @@ export default function NotFound() {
         <p style={{ margin: "24px auto 32px", maxWidth: 420, color: "var(--ink-dim)" }}>
           Esta pantalla no existe en el Vault. Revisa la dirección o vuelve a la biblioteca para elegir un juego.
         </p>
-        <Link href="/" className="btn magenta lg">
+        <Link href="/juegos" className="btn magenta lg">
           VOLVER AL VAULT
         </Link>
       </section>
