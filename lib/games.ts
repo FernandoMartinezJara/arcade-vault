@@ -9,14 +9,15 @@ export interface Game {
   cat: GameCategory;
   cover: string; // clase CSS de portada: "cover-bricks"
   color: GameColor;
-  best: number; // mejor puntuación global mock
-  plays: string; // "12.4K"
+  playable: boolean; // solo los juegos reales guardan puntajes
+  best: number | null; // máximo de scores (game_stats); null sin partidas
+  plays: number; // cantidad de partidas (game_stats)
 }
 export interface ScoreRow {
   rank: number;
   name: string;
   score: number;
-  date: string; // "DD/MM/2026"
+  date: string; // "DD/MM/YYYY", created_at formateado en UTC
 }
 export const GAMES: Game[] = [
   {
@@ -27,8 +28,9 @@ export const GAMES: Game[] = [
     cat: "SHOOTER",
     cover: "cover-asteroides",
     color: "cyan",
+    playable: true,
     best: 52300,
-    plays: "1.2K",
+    plays: 1200,
   },
   {
     id: "bloque-buster",
@@ -38,8 +40,9 @@ export const GAMES: Game[] = [
     cat: "ARCADE",
     cover: "cover-bricks",
     color: "cyan",
+    playable: false,
     best: 28450,
-    plays: "12.4K",
+    plays: 12400,
   },
   {
     id: "caida",
@@ -49,8 +52,9 @@ export const GAMES: Game[] = [
     cat: "PUZZLE",
     cover: "cover-tetro",
     color: "magenta",
+    playable: false,
     best: 184220,
-    plays: "31.8K",
+    plays: 31800,
   },
   {
     id: "serpentina",
@@ -60,8 +64,9 @@ export const GAMES: Game[] = [
     cat: "ARCADE",
     cover: "cover-snake",
     color: "green",
+    playable: false,
     best: 7820,
-    plays: "9.1K",
+    plays: 9100,
   },
   {
     id: "gloton",
@@ -71,8 +76,9 @@ export const GAMES: Game[] = [
     cat: "ARCADE",
     cover: "cover-glot",
     color: "yellow",
+    playable: false,
     best: 96400,
-    plays: "27.2K",
+    plays: 27200,
   },
   {
     id: "invasores",
@@ -82,8 +88,9 @@ export const GAMES: Game[] = [
     cat: "SHOOTER",
     cover: "cover-invaders",
     color: "green",
+    playable: false,
     best: 54190,
-    plays: "18.0K",
+    plays: 18000,
   },
   {
     id: "rocas",
@@ -93,8 +100,9 @@ export const GAMES: Game[] = [
     cat: "SHOOTER",
     cover: "cover-rocas",
     color: "yellow",
+    playable: false,
     best: 41200,
-    plays: "15.6K",
+    plays: 15600,
   },
   {
     id: "ranaria",
@@ -104,8 +112,9 @@ export const GAMES: Game[] = [
     cat: "ARCADE",
     cover: "cover-rana",
     color: "green",
+    playable: false,
     best: 18900,
-    plays: "6.4K",
+    plays: 6400,
   },
   {
     id: "duelo-pixel",
@@ -115,8 +124,9 @@ export const GAMES: Game[] = [
     cat: "VERSUS",
     cover: "cover-duelo",
     color: "cyan",
+    playable: false,
     best: 24,
-    plays: "4.2K",
+    plays: 4200,
   },
 ];
 export const CATS: ("TODOS" | GameCategory)[] = [
@@ -146,6 +156,13 @@ const PLAYERS = [
   "VECTORX",
   "JOY_STK",
 ];
+// 0 → "0", 1240 → "1.2K", 1_500_000 → "1.5M".
+export function formatPlays(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+  return String(n);
+}
+
 export function getGame(id: string): Game | undefined {
   return GAMES.find((g) => g.id === id);
 }

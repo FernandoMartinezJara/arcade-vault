@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Leaderboard } from "@/components/leaderboard";
-import { GAMES, getGame, seededScores } from "@/lib/games";
+import { GAMES, formatPlays, getGame, seededScores } from "@/lib/games";
 
 export const instant = false;
 
@@ -34,12 +34,12 @@ export default async function GameDetailPage({ params }: PageProps<"/juegos/[id]
           <div className="stat-strip">
             <div>
               <div className="l">Partidas</div>
-              <div className="v">{game.plays}</div>
+              <div className="v">{formatPlays(game.plays)}</div>
             </div>
             <div>
               <div className="l">Mejor global</div>
               <div className="v" style={{ color: "var(--magenta)", textShadow: "0 0 6px rgba(255,0,110,0.5)" }}>
-                {game.best.toLocaleString("es-ES")}
+                {game.best === null ? "—" : game.best.toLocaleString("es-ES")}
               </div>
             </div>
             <div>
