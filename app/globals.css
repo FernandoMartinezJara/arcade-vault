@@ -6,8 +6,11 @@
 
 /* ===== ARCADE VAULT — theme =====
  * Ported from references/templates/styles.css.
- * Fonts are self-hosted by next/font in app/layout.tsx, which exposes them
- * as --font-press-start-2p, --font-jetbrains-mono and --font-courier-prime.
+ * Fonts are self-hosted by next/font in app/layout.tsx. The stacks below name
+ * the families directly instead of using its --font-* variables: those append
+ * a metric-adjusted Arial "Fallback" face (Turbopack ignores
+ * adjustFontFallback: false), which drew glyphs missing from the subsets
+ * (▲, ≡, ▾) larger than the template does.
  */
 :root {
   --bg: #0a0a0f;
@@ -25,8 +28,8 @@
   --bronze: #d97a3a;
   --line: rgba(0, 245, 255, 0.18);
   --line-2: rgba(255, 255, 255, 0.06);
-  --pixel: var(--font-press-start-2p), "Press Start 2P", system-ui, monospace;
-  --mono: var(--font-jetbrains-mono), "JetBrains Mono", var(--font-courier-prime), "Courier Prime", "Courier New", monospace;
+  --pixel: "Press Start 2P", system-ui, monospace;
+  --mono: "JetBrains Mono", "Courier Prime", "Courier New", monospace;
 }
 
 /* Expose the theme to Tailwind utilities: bg-bg-2, text-cyan, border-line, font-pixel... */
@@ -245,6 +248,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    text-align: center; /* <button> default, needed for <Link className="btn"> when text wraps */
     gap: 10px;
     padding: 12px 20px;
     font-family: var(--pixel);
