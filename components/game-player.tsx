@@ -64,6 +64,17 @@ export function GamePlayer({ game }: { game: Game }) {
     setPaused(false);
     setOver(false);
     setSaved(false);
+    // Back to the start screen; the engine re-emits score, lives, level and phase.
+    engineRef.current?.reset();
+  };
+  // FIN: the real engine stops and reports "over", which opens the modal.
+  const finish = () => {
+    if (isReal) engineRef.current?.end();
+    else setOver(true);
+  };
+  const onPhase = (next: AsteroidsPhase) => {
+    setPhase(next);
+    if (next === "over") setOver(true);
   };
   const onSave = () => {
     saveScore({ game: game.id, score, name });
@@ -102,11 +113,7 @@ export function GamePlayer({ game }: { game: Game }) {
           >
             {paused ? "REANUDAR" : "PAUSA"}
           </button>
-          <button
-            className="btn magenta"
-            onClick={() => setOver(true)}
-            disabled={over}
-          >
+          <button className="btn magenta" onClick={finish} disabled={over}>
             FIN
           </button>
           <Link href={`/juegos/${game.id}`} className="btn ghost">
@@ -123,7 +130,7 @@ export function GamePlayer({ game }: { game: Game }) {
               onScore={setScore}
               onLives={setLives}
               onLevel={setEngineLevel}
-              onPhase={setPhase}
+              onPhase={onPhase}
             />
           ) : (
             <div className="game-arena" aria-hidden="true">
