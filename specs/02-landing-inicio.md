@@ -1,6 +1,6 @@
 # SPEC 02 — Landing de inicio
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** SPEC 01
 > **Fecha:** 2026-10-10
 > **Objetivo:** Reemplazar `/` por la landing de `references/home-about/` (home + nav con "Inicio") y mover la Biblioteca a `/juegos`, dejando fuera la página Acerca de.
