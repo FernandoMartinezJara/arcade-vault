@@ -5,13 +5,14 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { logout, useUser } from "@/lib/session";
 
-type Section = "inicio" | "biblioteca" | "salon" | "auth";
+type Section = "inicio" | "biblioteca" | "salon" | "acerca" | "auth";
 
 function activeSection(pathname: string): Section | null {
   if (pathname === "/") return "inicio";
   // Detail and player pages belong to the library.
   if (pathname.startsWith("/juegos")) return "biblioteca";
   if (pathname.startsWith("/salon")) return "salon";
+  if (pathname.startsWith("/acerca")) return "acerca";
   if (pathname.startsWith("/login")) return "auth";
   return null;
 }
@@ -51,6 +52,9 @@ export function Nav() {
           </Link>
           <Link href="/salon" className={cls("salon")} aria-current={active === "salon" ? "page" : undefined}>
             Salón de la Fama
+          </Link>
+          <Link href="/acerca" className={cls("acerca")} aria-current={active === "acerca" ? "page" : undefined}>
+            Acerca de
           </Link>
         </div>
         <div className="spacer"></div>
@@ -94,6 +98,9 @@ export function Nav() {
         </Link>
         <Link href="/salon" className={cls("salon")} onClick={close}>
           Salón de la Fama
+        </Link>
+        <Link href="/acerca" className={cls("acerca")} onClick={close}>
+          Acerca de
         </Link>
         <Link href="/login" className={cls("auth")} onClick={close}>
           {user ? "Cuenta" : "Iniciar Sesión"}
