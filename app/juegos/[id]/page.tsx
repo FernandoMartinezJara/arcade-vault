@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { Leaderboard } from "@/components/leaderboard";
 import { GAMES, getGame, seededScores } from "@/lib/games";
 
+export const instant = false;
+
 export function generateStaticParams() {
   return GAMES.map((g) => ({ id: g.id }));
 }

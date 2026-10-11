@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { GamePlayer } from "@/components/game-player";
 import { GAMES, getGame } from "@/lib/games";
 
+export const instant = false;
+
 export function generateStaticParams() {
   return GAMES.map((g) => ({ id: g.id }));
 }
