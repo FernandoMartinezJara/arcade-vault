@@ -5,11 +5,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { logout, useUser } from "@/lib/session";
 
-type Section = "biblioteca" | "salon" | "auth";
+type Section = "inicio" | "biblioteca" | "salon" | "auth";
 
 function activeSection(pathname: string): Section | null {
+  if (pathname === "/") return "inicio";
   // Detail and player pages belong to the library.
-  if (pathname === "/" || pathname.startsWith("/juegos")) return "biblioteca";
+  if (pathname.startsWith("/juegos")) return "biblioteca";
   if (pathname.startsWith("/salon")) return "salon";
   if (pathname.startsWith("/login")) return "auth";
   return null;
@@ -35,14 +36,17 @@ export function Nav() {
   return (
     <>
       <nav className="av-nav">
-        <Link href="/" className="logo" onClick={close} aria-label="Arcade Vault, ir a la biblioteca">
+        <Link href="/" className="logo" onClick={close} aria-label="Arcade Vault, ir al inicio">
           <div className="logo-mark"></div>
           <div className="logo-text neon-cyan">
             ARCADE <span className="neon-magenta">VAULT</span>
           </div>
         </Link>
         <div className="links">
-          <Link href="/" className={cls("biblioteca")} aria-current={active === "biblioteca" ? "page" : undefined}>
+          <Link href="/" className={cls("inicio")} aria-current={active === "inicio" ? "page" : undefined}>
+            Inicio
+          </Link>
+          <Link href="/juegos" className={cls("biblioteca")} aria-current={active === "biblioteca" ? "page" : undefined}>
             Biblioteca
           </Link>
           <Link href="/salon" className={cls("salon")} aria-current={active === "salon" ? "page" : undefined}>
@@ -82,7 +86,10 @@ export function Nav() {
         inert={!open}
       >
         <div className="pixel neon-cyan" style={{ fontSize: 11, marginBottom: 16 }}>MENÚ</div>
-        <Link href="/" className={cls("biblioteca")} onClick={close}>
+        <Link href="/" className={cls("inicio")} onClick={close}>
+          Inicio
+        </Link>
+        <Link href="/juegos" className={cls("biblioteca")} onClick={close}>
           Biblioteca
         </Link>
         <Link href="/salon" className={cls("salon")} onClick={close}>
