@@ -1,6 +1,6 @@
 # SPEC 03 — Página Acerca de y contacto por correo
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** SPEC 02
 > **Fecha:** 2026-10-11
 > **Objetivo:** Implementar `/acerca` fiel a `references/home-about/about.jsx`, con un formulario de contacto que envía el mensaje al equipo por correo usando Resend.
@@ -154,26 +154,26 @@ Antes de construir UI, invocar `/frontend-design` (ver `CLAUDE.md`), respetando 
 
 ## Criterios de aceptación
 
-- [ ] `npm run build`, `npm run lint` y `npx tsc --noEmit` terminan sin errores.
-- [ ] `npm run dev` no muestra errores en consola ni de hidratación al recorrer `/acerca`.
-- [ ] `/acerca` muestra el hero `ACERCA DE ARCADE VAULT`, la misión, 3 highlights con íconos, el divisor de píxeles y la sección `CONTÁCTANOS` con 3 tips y el formulario.
-- [ ] El nav muestra `Acerca de` después de `Salón de la Fama`, en desktop y en el panel móvil, y navega a `/acerca`.
-- [ ] `Acerca de` está activo solo en `/acerca`; los demás links mantienen su comportamiento de la SPEC 02.
-- [ ] Enviar con algún campo vacío (o solo espacios) hace shake y no ejecuta la Server Action.
-- [ ] Durante el envío, el botón dice `▶  TRANSMITIENDO…` y los campos y el botón están deshabilitados.
-- [ ] Con las 3 variables configuradas, un envío válido entrega un correo HTML a `CONTACT_TO_EMAIL` con nombre, correo y mensaje, y responder ese correo apunta al correo del usuario.
-- [ ] Tras un envío exitoso aparece la terminal con `GRACIAS, {NOMBRE}.` en mayúsculas.
-- [ ] `ENVIAR OTRO MENSAJE` vuelve al formulario con los tres campos vacíos.
-- [ ] Un mensaje con `<script>alert(1)</script>` llega como texto visible en el correo, no como HTML.
-- [ ] Un correo con formato inválido (p. ej. `jugador@vault`, quitando `type="email"` en DevTools) muestra `[ERR] DATOS INVÁLIDOS. REVISA NOMBRE, CORREO Y MENSAJE.` y no envía correo.
-- [ ] Sin `RESEND_API_KEY`, el envío muestra `[ERR] NO SE PUDO TRANSMITIR. INTÉNTALO DE NUEVO.`, el formulario conserva lo escrito y el servidor registra el error.
-- [ ] Con el honeypot `website` lleno (vía DevTools), se muestra la terminal de éxito y no se envía correo.
-- [ ] Ninguna variable de entorno aparece en el JS enviado al navegador (buscar `RESEND_API_KEY` y el valor de la key en `.next/static`).
-- [ ] `.env.example` está versionado y `.env.local` no.
-- [ ] Las secciones `.reveal` aparecen con fade al hacer scroll; con "reducir movimiento" se ven de inmediato y los píxeles del divisor no parpadean.
-- [ ] Con JavaScript deshabilitado, todas las secciones de `/acerca` son visibles.
-- [ ] A 360px, 375px y 841px, `/acerca` y el nav no tienen scroll horizontal.
-- [ ] La apariencia de `/acerca` coincide con la pantalla Acerca de de `references/home-about/arcade-vault-standalone.html` abierta en el navegador.
+- [x] `npm run build`, `npm run lint` y `npx tsc --noEmit` terminan sin errores.
+- [x] `npm run dev` no muestra errores en consola ni de hidratación al recorrer `/acerca`.
+- [x] `/acerca` muestra el hero `ACERCA DE ARCADE VAULT`, la misión, 3 highlights con íconos, el divisor de píxeles y la sección `CONTÁCTANOS` con 3 tips y el formulario.
+- [x] El nav muestra `Acerca de` después de `Salón de la Fama`, en desktop y en el panel móvil, y navega a `/acerca`.
+- [x] `Acerca de` está activo solo en `/acerca`; los demás links mantienen su comportamiento de la SPEC 02.
+- [x] Enviar con algún campo vacío (o solo espacios) hace shake y no ejecuta la Server Action.
+- [x] Durante el envío, el botón dice `▶  TRANSMITIENDO…` y los campos y el botón están deshabilitados.
+- [x] Con las 3 variables configuradas, un envío válido entrega un correo HTML a `CONTACT_TO_EMAIL` con nombre, correo y mensaje, y responder ese correo apunta al correo del usuario.
+- [x] Tras un envío exitoso aparece la terminal con `GRACIAS, {NOMBRE}.` en mayúsculas.
+- [x] `ENVIAR OTRO MENSAJE` vuelve al formulario con los tres campos vacíos.
+- [x] Un mensaje con `<script>alert(1)</script>` llega como texto visible en el correo, no como HTML.
+- [x] Un correo con formato inválido (p. ej. `jugador@vault`, quitando `type="email"` en DevTools) muestra `[ERR] DATOS INVÁLIDOS. REVISA NOMBRE, CORREO Y MENSAJE.` y no envía correo.
+- [x] Sin `RESEND_API_KEY`, el envío muestra `[ERR] NO SE PUDO TRANSMITIR. INTÉNTALO DE NUEVO.`, el formulario conserva lo escrito y el servidor registra el error.
+- [x] Con el honeypot `website` lleno (vía DevTools), se muestra la terminal de éxito y no se envía correo.
+- [x] Ninguna variable de entorno aparece en el JS enviado al navegador (buscar `RESEND_API_KEY` y el valor de la key en `.next/static`).
+- [x] `.env.example` está versionado y `.env.local` no.
+- [x] Las secciones `.reveal` aparecen con fade al hacer scroll; con "reducir movimiento" se ven de inmediato y los píxeles del divisor no parpadean.
+- [x] Con JavaScript deshabilitado, todas las secciones de `/acerca` son visibles.
+- [x] A 360px, 375px y 841px, `/acerca` y el nav no tienen scroll horizontal.
+- [x] La apariencia de `/acerca` coincide con la pantalla Acerca de de `references/home-about/arcade-vault-standalone.html` abierta en el navegador.
 
 ---
 
