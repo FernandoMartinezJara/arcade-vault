@@ -1,6 +1,6 @@
 # SPEC 05 — Juego Asteroides jugable
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** SPEC 01, SPEC 02
 > **Fecha:** 2026-10-11
 > **Objetivo:** Portar a TypeScript el Asteroids de `references/started-games/02-asteroids/` como el juego nuevo `asteroides`, jugable en `/juegos/asteroides/jugar` con el HUD, la pausa y el modal de fin de juego de la plataforma.
