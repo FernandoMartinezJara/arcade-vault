@@ -17,7 +17,7 @@ export function GamePlayer({ game }: { game: Game }) {
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
   const [engineLevel, setEngineLevel] = useState(1);
-  const [, setPhase] = useState<AsteroidsPhase>("ready");
+  const [phase, setPhase] = useState<AsteroidsPhase>("ready");
   const [paused, setPaused] = useState(false);
   const [over, setOver] = useState(false);
   // null until the player edits the initials, so the session name shows up after hydration.
@@ -25,6 +25,31 @@ export function GamePlayer({ game }: { game: Game }) {
   const [saved, setSaved] = useState(false);
   const name = typedName ?? user?.name ?? "INVITADO";
   const level = isReal ? engineLevel : 1 + Math.floor(score / LEVEL_EVERY);
+  // The real game can only pause mid-run, not on the start screen or after game over.
+  const canPause = !isReal || phase === "playing" || phase === "dead";
+  // P toggles and Esc pauses; hiding the tab pauses and only REANUDAR or P resume.
+  useEffect(() => {
+    if (!isReal || !canPause) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.repeat || e.target instanceof HTMLInputElement) return;
+      if (e.code === "KeyP") {
+        e.preventDefault();
+        setPaused((p) => !p);
+      } else if (e.code === "Escape") {
+        e.preventDefault();
+        setPaused(true);
+      }
+    };
+    const onVisibility = () => {
+      if (document.hidden) setPaused(true);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [isReal, canPause]);
   useEffect(() => {
     if (isReal || over || paused) return;
     const t = setInterval(
@@ -73,7 +98,7 @@ export function GamePlayer({ game }: { game: Game }) {
           <button
             className="btn yellow"
             onClick={() => setPaused((p) => !p)}
-            disabled={over}
+            disabled={over || !canPause}
           >
             {paused ? "REANUDAR" : "PAUSA"}
           </button>
