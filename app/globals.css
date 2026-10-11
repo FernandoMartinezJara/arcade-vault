@@ -215,6 +215,12 @@
     .av-nav .hamburger { display: inline-flex; }
   }
 
+  /* Logo + session button + hamburger overflow narrow phones at the default gap. */
+  @media (max-width: 420px) {
+    .av-nav { gap: 12px; }
+    .av-nav .auth-btn { padding-left: 14px; padding-right: 14px; }
+  }
+
   .av-mobile-panel {
     position: fixed;
     inset: 0 0 0 auto;
@@ -556,7 +562,7 @@
     margin: 48px auto;
     padding: 0 32px;
   }
-  @media (max-width: 900px) { .av-detail { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .av-detail { grid-template-columns: minmax(0, 1fr); } }
   .detail-cover {
     aspect-ratio: 16 / 10;
     position: relative;
@@ -966,6 +972,15 @@
     .av-player { padding: 0 16px 32px; }
   }
 
+  /* Narrow phones: hall table columns and detail stats no longer fit at their 720px sizes. */
+  @media (max-width: 420px) {
+    .hall-table .th, .hall-table .tr { grid-template-columns: 44px minmax(0, 1fr) 84px 76px; gap: 8px; padding: 10px 8px; }
+    .hall-table .th { font-size: 8px; letter-spacing: 0.04em; }
+    .hall-table .tr.you { padding-left: 5px; }
+    .stat-strip > div { padding: 10px; }
+    .stat-strip .v { font-size: 12px; }
+  }
+
   /* misc */
   .divider { height: 1px; background: var(--line); margin: 8px 0; }
   .fade-in { animation: fadeIn 240ms ease-out; }
@@ -1135,7 +1150,7 @@
 
   /* ===== ACTIVITY (leaderboard + ticker) ===== */
   .activity-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 18px; }
-  @media (max-width: 900px) { .activity-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .activity-grid { grid-template-columns: minmax(0, 1fr); } }
   .activity-card { background: var(--bg-2); border: 1px solid var(--line); padding: 0; }
   .ac-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line); min-width: 0; }
   .ac-title { font-size: 10px; letter-spacing: 0.1em; color: var(--cyan); text-shadow: 0 0 8px rgba(0,245,255,0.5); min-width: 0; flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

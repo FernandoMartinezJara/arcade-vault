@@ -39,6 +39,7 @@ Las fuentes de verdad de esta spec son `references/home-about/home.jsx`, `refere
 - **Nav**: links `Inicio` (→ `/`), `Biblioteca` (→ `/juegos`) y `Salón de la Fama`, en desktop y en el panel móvil. El logo lleva a `/`.
 - **Links que hoy apuntan a `/`** y pasan a `/juegos`: `VOLVER AL VAULT` (detalle, modal del reproductor y 404), `VOLVER A LA BIBLIOTECA` (Salón) y la redirección tras login e invitado.
 - **CSS**: portar a `app/globals.css` solo los bloques de `references/home-about/styles.css` que usa la landing.
+- **Scroll horizontal en móviles angostos (360–420px)**: corregirlo en el nav, la sección de actividad de la landing, el Detalle y el Salón de la Fama (los tres últimos heredados de la SPEC 01 o del CSS de la referencia).
 
 **Fuera de alcance (para futuras specs):**
 
@@ -125,7 +126,13 @@ Antes de construir UI, invocar `/frontend-design` (ver `CLAUDE.md`), respetando 
 4. **Contenido mock.** Crear `lib/home.ts` con los tipos y constantes del modelo de datos. Verificar con `npx tsc --noEmit`.
 5. **Componentes de la landing.** Crear como server components `components/home-silhouettes.tsx` (8 SVG con `aria-hidden`), `components/feature-icon.tsx` (íconos pixel) y `components/mini-card.tsx` (un `<Link>` a `/juegos/[id]` con portada, título y categoría). Crear `components/reveal-observer.tsx` (client, renderiza `null`): observa los `.reveal`, les agrega `.in` al entrar en pantalla y, si no existe `IntersectionObserver`, agrega `.in` a todos de inmediato.
 6. **Landing.** Reemplazar `app/page.tsx` por la landing (server component) con las 7 secciones de `home.jsx`, usando `<Link>` en todos los CTAs, `<RevealObserver />` y un `<noscript><style>` que deja `.reveal` visible sin JS. Manual: `/` muestra la landing completa y cada CTA navega a su destino.
-7. **Cierre técnico.** Ejecutar `npm run lint`, `npx tsc --noEmit` y `npm run build`. Corregir errores e insights de Cache Components / Partial Prefetching. Recorrer `/`, `/juegos`, detalle, reproductor, login, salón y 404 sin errores de hidratación.
+7. **Ajustes para móvil angosto.** En `app/globals.css`:
+   - **Nav:** agregar `@media (max-width: 420px)` que baja el `gap` de `.av-nav` a 12px y el padding horizontal de `.av-nav .auth-btn` a 14px. Hoy, a 375px, logo + botón de sesión + hamburguesa + gaps suman 396px.
+   - **Actividad (landing) y Detalle:** en sus media queries de ≤ 900px, cambiar `grid-template-columns: 1fr` por `minmax(0, 1fr)` en `.activity-grid` y `.av-detail`. Un track `1fr` no baja de su contenido mínimo, y el ticker y el leaderboard lo ensanchan más allá del contenedor.
+   - **Stats del Detalle:** en el mismo `@media (max-width: 420px)`, bajar `.stat-strip .v` a 12px y el padding de cada celda a 10px. A 360px, los tres valores en 16px necesitan ~351px y solo hay 328px.
+   - **Tabla del Salón:** agregar `@media (max-width: 420px)` con columnas compactas para `.hall-table .th, .hall-table .tr` (rango y puntaje fijos, jugador `minmax(0, 1fr)`, gap y padding menores) y encabezados más chicos para que `PUNTUACIÓN` quepa en su columna.
+   Manual: a 360px y 375px, con y sin sesión, ninguna pantalla tiene scroll horizontal, el botón de sesión sigue visible y la tabla del Salón no superpone columnas.
+8. **Cierre técnico.** Ejecutar `npm run lint`, `npx tsc --noEmit` y `npm run build`. Corregir errores e insights de Cache Components / Partial Prefetching. Recorrer `/`, `/juegos`, detalle, reproductor, login, salón y 404 sin errores de hidratación.
 
 ---
 
@@ -148,6 +155,8 @@ Antes de construir UI, invocar `/frontend-design` (ver `CLAUDE.md`), respetando 
 - [ ] `VOLVER AL VAULT` (detalle, modal del reproductor, 404) y `VOLVER A LA BIBLIOTECA` (Salón) navegan a `/juegos`.
 - [ ] Enviar el login o entrar como invitado redirige a `/juegos`.
 - [ ] Con ancho ≤ 600px el rail muestra 2 columnas y las features 1 columna en ≤ 520px, sin scroll horizontal.
+- [ ] A 360px y 375px, con y sin sesión, ninguna pantalla (`/`, `/juegos`, detalle, reproductor, login, salón, 404) tiene scroll horizontal y el botón de sesión del nav sigue visible.
+- [ ] A 360px las columnas de la tabla del Salón no se superponen y cada puntaje se lee completo.
 - [ ] La apariencia de `/` coincide con la pantalla Inicio de `references/home-about/arcade-vault-standalone.html` abierta en el navegador.
 
 ---
@@ -170,6 +179,10 @@ Antes de construir UI, invocar `/frontend-design` (ver `CLAUDE.md`), respetando 
 - **Sí:** landing igual con o sin sesión. Permite que `app/page.tsx` sea un server component estático, sin riesgo de hidratación.
 - **No:** ocultar `CREAR CUENTA` con sesión. Requiere `useUser` en un client component para un cambio menor.
 - **Sí:** contenido de la landing en `lib/home.ts` tipado. Separa copy de marcado, igual que `lib/games.ts`.
+- **Sí:** compactar el nav a ≤ 420px (gap 12px, padding del botón de sesión 14px). Corrige el desborde de 21px de la SPEC 01 sin quitar nada.
+- **Sí:** `minmax(0, 1fr)` en las grillas de una columna de Actividad y Detalle. Es la corrección estándar del desborde por contenido mínimo y no cambia el diseño en anchos mayores.
+- **Sí:** corregir en esta spec el desborde de Detalle y Salón (SPEC 01). Se detectó al verificar el criterio de scroll horizontal y se decidió no diferirlo.
+- **No:** ocultar el botón de sesión en móvil. Con sesión iniciada es el único control para cerrar sesión; el link "Cuenta" del panel móvil solo lleva a `/login`.
 - **Sí:** solo `RevealObserver` es client component; siluetas, íconos y `mini-card` son server components. Minimiza el JS enviado.
 
 ---
