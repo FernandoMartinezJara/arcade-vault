@@ -1,8 +1,6 @@
 // Mock data ported from references/templates/data.jsx.
-
 export type GameCategory = "ARCADE" | "PUZZLE" | "SHOOTER" | "VERSUS";
 export type GameColor = "cyan" | "magenta" | "yellow" | "green";
-
 export interface Game {
   id: string; // slug usado en la URL: "bloque-buster"
   title: string; // "BLOQUE BUSTER"
@@ -14,15 +12,24 @@ export interface Game {
   best: number; // mejor puntuación global mock
   plays: string; // "12.4K"
 }
-
 export interface ScoreRow {
   rank: number;
   name: string;
   score: number;
   date: string; // "DD/MM/2026"
 }
-
 export const GAMES: Game[] = [
+  {
+    id: "asteroides",
+    title: "ASTEROIDES",
+    short: "Rota, acelera y parte rocas en un campo sin bordes.",
+    long: "Tu nave flota en un campo de asteroides donde salir por un borde te devuelve por el opuesto. Cada roca grande se parte en dos medianas y cada mediana en dos pequeñas. Atrapa el power-up de triple disparo y limpia el campo antes de que te rodeen.",
+    cat: "SHOOTER",
+    cover: "cover-asteroides",
+    color: "cyan",
+    best: 52300,
+    plays: "1.2K",
+  },
   {
     id: "bloque-buster",
     title: "BLOQUE BUSTER",
@@ -112,7 +119,6 @@ export const GAMES: Game[] = [
     plays: "4.2K",
   },
 ];
-
 export const CATS: ("TODOS" | GameCategory)[] = [
   "TODOS",
   "ARCADE",
@@ -120,17 +126,29 @@ export const CATS: ("TODOS" | GameCategory)[] = [
   "SHOOTER",
   "VERSUS",
 ];
-
 const PLAYERS = [
-  "PX_KAI", "NEONFOX", "Z3R0COOL", "M00NRYU", "VAULT_07", "GLITCHA",
-  "ATARI_KID", "CYBER_LU", "MAGENTA88", "SCANLINE", "BIT_LORD", "ARKADYA",
-  "DROID_X", "RGB_QUEEN", "PIXEL_DAD", "RETROVIRA", "VECTORX", "JOY_STK",
+  "PX_KAI",
+  "NEONFOX",
+  "Z3R0COOL",
+  "M00NRYU",
+  "VAULT_07",
+  "GLITCHA",
+  "ATARI_KID",
+  "CYBER_LU",
+  "MAGENTA88",
+  "SCANLINE",
+  "BIT_LORD",
+  "ARKADYA",
+  "DROID_X",
+  "RGB_QUEEN",
+  "PIXEL_DAD",
+  "RETROVIRA",
+  "VECTORX",
+  "JOY_STK",
 ];
-
 export function getGame(id: string): Game | undefined {
   return GAMES.find((g) => g.id === id);
 }
-
 // Deterministic LCG, identical to the template so server and client render the same rows.
 export function seededScores(seed: number, count = 12): ScoreRow[] {
   let s = seed;
@@ -147,7 +165,14 @@ export function seededScores(seed: number, count = 12): ScoreRow[] {
     const score = base - i * Math.floor(2000 + rand() * 4000);
     const day = String(1 + Math.floor(rand() * 28)).padStart(2, "0");
     const mon = String(1 + Math.floor(rand() * 12)).padStart(2, "0");
-    rows.push({ rank: i + 1, name, score: Math.max(score, 1000), date: `${day}/${mon}/2026` });
+    rows.push({
+      rank: i + 1,
+      name,
+      score: Math.max(score, 1000),
+      date: `${day}/${mon}/2026`,
+    });
   }
-  return rows.sort((a, b) => b.score - a.score).map((r, i) => ({ ...r, rank: i + 1 }));
+  return rows
+    .sort((a, b) => b.score - a.score)
+    .map((r, i) => ({ ...r, rank: i + 1 }));
 }
