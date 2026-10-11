@@ -6,8 +6,11 @@
 
 /* ===== ARCADE VAULT — theme =====
  * Ported from references/templates/styles.css.
- * Fonts are self-hosted by next/font in app/layout.tsx, which exposes them
- * as --font-press-start-2p, --font-jetbrains-mono and --font-courier-prime.
+ * Fonts are self-hosted by next/font in app/layout.tsx. The stacks below name
+ * the families directly instead of using its --font-* variables: those append
+ * a metric-adjusted Arial "Fallback" face (Turbopack ignores
+ * adjustFontFallback: false), which drew glyphs missing from the subsets
+ * (▲, ≡, ▾) larger than the template does.
  */
 :root {
   --bg: #0a0a0f;
@@ -25,8 +28,8 @@
   --bronze: #d97a3a;
   --line: rgba(0, 245, 255, 0.18);
   --line-2: rgba(255, 255, 255, 0.06);
-  --pixel: var(--font-press-start-2p), "Press Start 2P", system-ui, monospace;
-  --mono: var(--font-jetbrains-mono), "JetBrains Mono", var(--font-courier-prime), "Courier Prime", "Courier New", monospace;
+  --pixel: "Press Start 2P", system-ui, monospace;
+  --mono: "JetBrains Mono", "Courier Prime", "Courier New", monospace;
 }
 
 /* Expose the theme to Tailwind utilities: bg-bg-2, text-cyan, border-line, font-pixel... */
@@ -245,6 +248,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    text-align: center; /* <button> default, needed for <Link className="btn"> when text wraps */
     gap: 10px;
     padding: 12px 20px;
     font-family: var(--pixel);
@@ -983,4 +987,24 @@
     clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
   }
   @keyframes spinpix { to { transform: rotate(360deg); } }
+
+  /* ===== accessibility: keyboard focus + reduced motion ===== */
+  :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+  /* .btn uses clip-path, which would clip an outline: draw the ring inside instead. */
+  .btn:focus-visible {
+    outline: none;
+    color: var(--cyan);
+    box-shadow: 0 0 14px rgba(0,245,255,0.55), inset 0 0 0 2px var(--cyan);
+  }
+  .btn.magenta:focus-visible { color: var(--magenta); box-shadow: 0 0 14px rgba(255,0,110,0.55), inset 0 0 0 2px var(--magenta); }
+  .btn.yellow:focus-visible { color: var(--yellow); box-shadow: 0 0 14px rgba(245,255,0,0.6), inset 0 0 0 2px var(--yellow); }
+  .btn.ghost:focus-visible { color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink-dim); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
