@@ -1025,6 +1025,49 @@
     color: var(--bronze);
     text-shadow: 0 0 6px rgba(217, 122, 58, 0.5);
   }
+  /* Empty and error states share one block; the error swaps the accent to yellow. */
+  .lb-state {
+    padding: 40px 20px;
+    text-align: center;
+  }
+  .lb-state-title {
+    font-family: var(--pixel);
+    font-size: 10px;
+    line-height: 1.8;
+    letter-spacing: 0.12em;
+    color: var(--cyan);
+    text-shadow: 0 0 8px rgba(0, 245, 255, 0.45);
+  }
+  .lb-state.error .lb-state-title {
+    color: var(--yellow);
+    text-shadow: 0 0 8px rgba(245, 255, 0, 0.45);
+  }
+  .lb-state p {
+    margin: 10px auto 0;
+    max-width: 260px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  .lb-skel span {
+    display: block;
+    height: 10px;
+    background: var(--line-2);
+    animation: lb-skel 1.2s ease-in-out infinite alternate;
+  }
+  .lb-skel span:nth-child(2) {
+    width: 70%;
+  }
+  @keyframes lb-skel {
+    to {
+      opacity: 0.35;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lb-skel span {
+      animation: none;
+    }
+  }
   /* ===== player ===== */
   .av-player {
     max-width: 1100px;

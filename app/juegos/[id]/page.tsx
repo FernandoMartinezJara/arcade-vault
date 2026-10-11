@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Leaderboard } from "@/components/leaderboard";
+import { Suspense } from "react";
+import { Leaderboard, LeaderboardSkeleton } from "@/components/leaderboard";
 import { getGame, getGames } from "@/lib/catalog";
-import { formatPlays, seededScores } from "@/lib/games";
+import { formatPlays, type ScoreRow } from "@/lib/games";
+import { getLeaderboard } from "@/lib/scores";
 
 export const instant = false;
 
@@ -15,8 +17,6 @@ export default async function GameDetailPage({ params }: PageProps<"/juegos/[id]
   const { id } = await params;
   const game = await getGame(id);
   if (!game) notFound();
-
-  const scores = seededScores(id.length * 17 + 3, 10);
 
   return (
     <div className="av-detail fade-in">
@@ -63,8 +63,22 @@ export default async function GameDetailPage({ params }: PageProps<"/juegos/[id]
       </div>
 
       <aside>
-        <Leaderboard scores={scores} />
+        <Suspense fallback={<LeaderboardSkeleton />}>
+          <DetailLeaderboard gameId={game.id} />
+        </Suspense>
       </aside>
     </div>
   );
+}
+
+// A failed scores read only blanks this block; the rest of the page still renders.
+async function DetailLeaderboard({ gameId }: { gameId: string }) {
+  let scores: ScoreRow[] | null;
+  try {
+    scores = await getLeaderboard(gameId, 10);
+  } catch (err) {
+    console.error(err);
+    scores = null;
+  }
+  return <Leaderboard scores={scores} />;
 }
