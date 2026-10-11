@@ -1,0 +1,10 @@
+.next/
+out/
+build/
+node_modules/
+.playwright-mcp/
+references/
+package-lock.json
+next-env.d.ts
+# Managed by `next dev` (experimental.agentFeedback); leave its format alone.
+AGENTS.md
