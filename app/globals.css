@@ -1404,6 +1404,26 @@
       caret 0.8s steps(1) infinite;
     width: 0;
   }
+  /* Below the initials: demo notice or save error. */
+  .modal .save-note {
+    margin: 0;
+    font-family: var(--pixel);
+    font-size: 9px;
+    line-height: 1.8;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+  }
+  .modal .save-note.error {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0;
+    color: var(--magenta);
+  }
+  .modal .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
   @keyframes typewriter {
     to {
       width: 22ch;

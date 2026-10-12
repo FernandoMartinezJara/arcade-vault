@@ -1,13 +1,14 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { AsteroidesCanvas } from "@/components/asteroides-canvas";
 import type {
   AsteroidsEngine,
   AsteroidsPhase,
 } from "@/games/asteroides/engine";
 import type { Game } from "@/lib/games";
-import { saveScore, useUser } from "@/lib/session";
+import { saveScoreAction } from "@/app/juegos/[id]/jugar/actions";
+import { useUser } from "@/lib/session";
 const LEVEL_EVERY = 2500;
 export function GamePlayer({ game }: { game: Game }) {
   const user = useUser();
@@ -23,6 +24,8 @@ export function GamePlayer({ game }: { game: Game }) {
   // null until the player edits the initials, so the session name shows up after hydration.
   const [typedName, setTypedName] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [saving, startSaving] = useTransition();
   const name = typedName ?? user?.name ?? "INVITADO";
   const level = isReal ? engineLevel : 1 + Math.floor(score / LEVEL_EVERY);
   // The real game can only pause mid-run, not on the start screen or after game over.
@@ -64,6 +67,7 @@ export function GamePlayer({ game }: { game: Game }) {
     setPaused(false);
     setOver(false);
     setSaved(false);
+    setSaveError(null);
     // Back to the start screen; the engine re-emits score, lives, level and phase.
     engineRef.current?.reset();
   };
@@ -77,8 +81,12 @@ export function GamePlayer({ game }: { game: Game }) {
     if (next === "over") setOver(true);
   };
   const onSave = () => {
-    saveScore({ game: game.id, score, name });
-    setSaved(true);
+    setSaveError(null);
+    startSaving(async () => {
+      const res = await saveScoreAction({ gameId: game.id, score, name });
+      if (res.ok) setSaved(true);
+      else setSaveError(res.error);
+    });
   };
   return (
     <div className="av-player fade-in">
@@ -209,20 +217,37 @@ export function GamePlayer({ game }: { game: Game }) {
             <div className="final-label">PUNTUACIÓN FINAL</div>
             <div className="final">{score.toLocaleString("es-ES")}</div>
             {!saved ? (
-              <div className="input-row">
-                <input
-                  value={name}
-                  onChange={(e) =>
-                    setTypedName(e.target.value.toUpperCase().slice(0, 10))
-                  }
-                  placeholder="TUS INICIALES"
-                  aria-label="Tus iniciales"
-                  autoFocus
-                />
-                <button className="btn yellow" onClick={onSave}>
-                  GUARDAR PUNTUACIÓN
-                </button>
-              </div>
+              <>
+                <div className="input-row">
+                  <input
+                    value={name}
+                    onChange={(e) =>
+                      setTypedName(e.target.value.toUpperCase().slice(0, 10))
+                    }
+                    placeholder="TUS INICIALES"
+                    aria-label="Tus iniciales"
+                    autoFocus
+                  />
+                  <button
+                    className="btn yellow"
+                    onClick={onSave}
+                    disabled={!game.playable || saving}
+                  >
+                    {saving
+                      ? "GUARDANDO…"
+                      : saveError
+                        ? "REINTENTAR"
+                        : "GUARDAR PUNTUACIÓN"}
+                  </button>
+                </div>
+                {!game.playable ? (
+                  <p className="save-note">DEMO: NO SE GUARDA</p>
+                ) : saveError ? (
+                  <p className="save-note error" role="alert">
+                    {saveError}
+                  </p>
+                ) : null}
+              </>
             ) : (
               <div className="toast-saved" role="status">
                 ▸ PUNTUACIÓN GUARDADA_
