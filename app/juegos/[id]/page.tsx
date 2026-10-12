@@ -1,20 +1,22 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Leaderboard } from "@/components/leaderboard";
-import { GAMES, getGame, seededScores } from "@/lib/games";
+import { Suspense } from "react";
+import { Leaderboard, LeaderboardSkeleton } from "@/components/leaderboard";
+import { getGame, getGames } from "@/lib/catalog";
+import { formatPlays, type ScoreRow } from "@/lib/games";
+import { getLeaderboard } from "@/lib/scores";
 
 export const instant = false;
 
-export function generateStaticParams() {
-  return GAMES.map((g) => ({ id: g.id }));
+export async function generateStaticParams() {
+  const games = await getGames();
+  return games.map((g) => ({ id: g.id }));
 }
 
 export default async function GameDetailPage({ params }: PageProps<"/juegos/[id]">) {
   const { id } = await params;
-  const game = getGame(id);
+  const game = await getGame(id);
   if (!game) notFound();
-
-  const scores = seededScores(id.length * 17 + 3, 10);
 
   return (
     <div className="av-detail fade-in">
@@ -34,12 +36,12 @@ export default async function GameDetailPage({ params }: PageProps<"/juegos/[id]
           <div className="stat-strip">
             <div>
               <div className="l">Partidas</div>
-              <div className="v">{game.plays}</div>
+              <div className="v">{formatPlays(game.plays)}</div>
             </div>
             <div>
               <div className="l">Mejor global</div>
               <div className="v" style={{ color: "var(--magenta)", textShadow: "0 0 6px rgba(255,0,110,0.5)" }}>
-                {game.best.toLocaleString("es-ES")}
+                {game.best === null ? "—" : game.best.toLocaleString("es-ES")}
               </div>
             </div>
             <div>
@@ -61,8 +63,22 @@ export default async function GameDetailPage({ params }: PageProps<"/juegos/[id]
       </div>
 
       <aside>
-        <Leaderboard scores={scores} />
+        <Suspense fallback={<LeaderboardSkeleton />}>
+          <DetailLeaderboard gameId={game.id} />
+        </Suspense>
       </aside>
     </div>
   );
+}
+
+// A failed scores read only blanks this block; the rest of the page still renders.
+async function DetailLeaderboard({ gameId }: { gameId: string }) {
+  let scores: ScoreRow[] | null;
+  try {
+    scores = await getLeaderboard(gameId, 10);
+  } catch (err) {
+    console.error(err);
+    scores = null;
+  }
+  return <Leaderboard scores={scores} />;
 }
