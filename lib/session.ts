@@ -1,19 +1,11 @@
-// Mock session and scores persisted in localStorage (same keys as the template).
+// Mock session persisted in localStorage (same key as the template). Scores live in Supabase.
 import { useSyncExternalStore } from "react";
 
 export interface User {
   name: string; // máx. 10 caracteres, en mayúsculas
 }
 
-export interface ScoreEntry {
-  game: string; // Game.id
-  score: number;
-  name: string; // iniciales escritas en el modal (máx. 10, mayúsculas)
-  at: number; // Date.now()
-}
-
 const USER_KEY = "av_user";
-const SCORES_KEY = "av_scores";
 
 const listeners = new Set<() => void>();
 
@@ -83,26 +75,4 @@ export function login(user: User): void {
 export function logout(): void {
   write(USER_KEY, null);
   notify();
-}
-
-function readScores(): ScoreEntry[] {
-  try {
-    const parsed: unknown = JSON.parse(read(SCORES_KEY) || "[]");
-    return Array.isArray(parsed) ? (parsed as ScoreEntry[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-export function saveScore(entry: Omit<ScoreEntry, "at">): void {
-  const all = readScores();
-  all.push({ ...entry, at: Date.now() });
-  write(SCORES_KEY, JSON.stringify(all));
-}
-
-export function getBestScore(gameId: string, name: string): number | null {
-  const scores = readScores()
-    .filter((s) => s.game === gameId && s.name === name)
-    .map((s) => s.score);
-  return scores.length ? Math.max(...scores) : null;
 }
