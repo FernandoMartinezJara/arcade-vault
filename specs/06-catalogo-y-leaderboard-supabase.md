@@ -1,6 +1,6 @@
 # SPEC 06 — Catálogo y leaderboard en Supabase
 
-> **Estado:** Aprobada
+> **Estado:** Implementada
 > **Depende de:** SPEC 01, SPEC 04, SPEC 05
 > **Fecha:** 2026-10-11
 > **Objetivo:** Mover el catálogo de `lib/games.ts` a una tabla `games` y los puntajes a una tabla `scores` en Supabase, para que la Biblioteca, el detalle, el reproductor y el Salón de la Fama lean y guarden datos reales.
