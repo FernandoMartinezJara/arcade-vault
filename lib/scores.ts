@@ -32,3 +32,18 @@ export async function getLeaderboard(
     date: DATE_FMT.format(new Date(r.created_at!)),
   }));
 }
+
+// Uncached: called from a Server Action with whatever name the browser session holds.
+export async function getPlayerBest(
+  gameId: string,
+  name: string,
+): Promise<{ rank: number; score: number } | null> {
+  const { data, error } = await createPublicClient()
+    .from("leaderboard")
+    .select("rank, score")
+    .eq("game_id", gameId)
+    .eq("name", name)
+    .maybeSingle();
+  if (error) throw new Error(`leaderboard: ${error.message}`);
+  return data ? { rank: data.rank!, score: data.score! } : null;
+}
